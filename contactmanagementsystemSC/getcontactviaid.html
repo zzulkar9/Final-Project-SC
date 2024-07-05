@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  	<head>
+    	<title>GET contact via id</title>
+    	<meta charset="utf-8">
+  	</head>
+  	<body>
+      <table border="1">
+        <tr>
+          <th>ID:</th>
+          <td><span id="id"></span></td>
+        </tr>
+        <tr>
+          <th>Name:</th>
+          <td><span id="name"></span></td>
+        </tr>
+        <tr>
+          <th>Email:</th>
+          <td><span id="email"></span></td>
+        </tr>
+        <tr>
+          <th>Mobile No:</th>
+          <td><span id="mobileno"></span></td>
+        </tr>
+        <tr>
+          <th>Photo:</th>
+          <td><span id="photo"></span></td>
+        </tr>
+        <tr>
+          <th>Status:</th>
+          <td><span id="status"></span></td>
+        </tr>
+      </table>   
+
+		<script src="js/jquery-3.2.1.min.js"></script>
+		<script>
+			$(function() {
+
+        var id = 1;
+
+        //CONTACTS CRUD - GET contact via id
+        $.ajax({
+          type: "get", 
+          url: 'api/getapi/contacts/' + id,
+          dataType: "json",
+          success: function(data){
+
+            var status = "";
+            if (data.status == 0)   
+              status = "Inactive";
+            else
+              status = "Active";
+
+            $("#id").html(data.id);
+            $("#name").html(data.name);
+            $("#email").html(data.email);
+            $("#mobileno").html(data.mobileno);
+            $("#photo").html(data.photo);
+            $("#status").html(status);            
+          },
+          error: function() {
+            console.log("error");
+          }
+        });
+			});
+		</script>
+  	</body>
+</html>

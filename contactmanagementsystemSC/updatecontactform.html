@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPDATE Contact via ID</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-bottom: 0.5rem;
+        }
+        input[type="text"],
+        input[type="email"] {
+            width: calc(100% - 1rem);
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+        input[type="submit"] {
+            width: 100%;
+            padding: 0.7rem;
+            border: none;
+            border-radius: 5px;
+            background-color: #5cb85c;
+            color: white;
+            font-size: 1rem;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #4cae4c;
+        }
+        .form-group {
+            position: relative;
+        }
+        .form-group i {
+            position: absolute;
+            right: 10px;
+            top: calc(50% - 7px);
+            color: #aaa;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Update Contact</h2>
+    <form id="form1" name="form1" method="post">
+        <div class="form-group">
+            <label for="id">Index:</label>
+            <input type="text" id="id" name="id" required>
+            <i class="fas fa-id-badge"></i>
+        </div>
+        <div class="form-group">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required>
+            <i class="fas fa-user"></i>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+            <i class="fas fa-envelope"></i>
+        </div>
+        <div class="form-group">
+            <label for="mobileno">Mobile No:</label>
+            <input type="text" id="mobileno" name="mobileno" required>
+            <i class="fas fa-phone"></i>
+        </div>
+        <input type="submit" value="Submit">
+    </form>
+</div>
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script>
+    $(function() {
+        var id = 9;
+
+        // Get contact by id
+        $.ajax({
+            type: "get",
+            url: 'api/getapi/contacts/' + id,
+            dataType: "json",
+            success: function(data) {
+                $("#id").val(id);
+                $("#name").val(data.name);
+                $("#email").val(data.email);
+                $("#mobileno").val(data.mobileno);
+            },
+            error: function() {
+                console.log("error");
+            }
+        });
+
+        $("#form1").submit(function(event) {
+            event.preventDefault();
+
+            var obj = {
+                name: $("#name").val(),
+                email: $("#email").val(),
+                mobileno: $("#mobileno").val()
+            };
+
+            $.ajax({
+                type: "put",
+                url: 'api/getapi/contacts/' + $("#id").val(),
+                contentType: 'application/json',
+                data: JSON.stringify(obj),
+                dataType: "json",
+                success: function(data) {
+                    if (data.updatestatus) {
+                        alert("Contact update successful");
+                    } else {
+                        alert("Contact update failed - please try again: " + data.error);
+                    }
+                },
+                error: function() {
+                    console.log("error");
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GET All Contacts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 800px;
+            width: 100%;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        .status-active {
+            color: green;
+            font-weight: bold;
+        }
+        .status-inactive {
+            color: red;
+            font-weight: bold;
+        }
+        .photo {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>All Contacts</h2>
+    <table id="tbl">
+        <thead>
+            <tr>
+                <th>Index</th> 
+                <th>Name</th>               
+                <th>Email</th>
+                <th>Mobile No</th>
+                <th>Status</th>
+            </tr>   
+        </thead>
+        <tbody>            
+        </tbody>
+    </table>
+</div>
+
+<script src="js/jquery-3.2.1.min.js"></script>
+<script>
+    $(function() {
+        // CONTACTS CRUD - GET all contacts
+        $.ajax({
+            type: "get",
+            url: 'api/getall/contacts',
+            dataType: "json",
+            success: function(data) {
+                var index = 0;
+
+                for (var x in data) {
+                    index = parseInt(index) + 1;
+
+                    var statusClass = data[x].status == 0 ? 'status-inactive' : 'status-active';
+                    var statusText = data[x].status == 0 ? 'Inactive' : 'Active';
+                    var photo = data[x].photo ? `<img src="${data[x].photo}" alt="Photo" class="photo">` : 'N/A';
+
+                    $("#tbl tbody").append(
+                        `<tr>
+                            <td>${data[x].id}</td>
+                            <td>${data[x].name}</td>
+                            <td>${data[x].email}</td>
+                            <td>${data[x].mobileno}</td>
+                            <td class="${statusClass}">${statusText}</td>
+                        </tr>`
+                    );
+                }
+            },
+            error: function() {
+                console.log("error");
+            }
+        });
+    });
+</script>
+</body>
+</html>

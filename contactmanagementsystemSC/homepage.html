@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Management Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 600px;
+            width: 100%;
+            text-align: center;
+        }
+        h2 {
+            margin-bottom: 2rem;
+            color: #333;
+        }
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            margin: 1rem;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #fff;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn-create {
+            background-color: #5cb85c;
+        }
+        .btn-create:hover {
+            background-color: #4cae4c;
+        }
+        .btn-update {
+            background-color: #337ab7;
+        }
+        .btn-update:hover {
+            background-color: #286090;
+        }
+        .btn-list {
+            background-color: #f0ad4e;
+        }
+        .btn-list:hover {
+            background-color: #ec971f;
+        }
+        .btn-api {
+            background-color: #d9534f;
+        }
+        .btn-api:hover {
+            background-color: #c9302c;
+        }
+        .fa-plus, .fa-edit, .fa-list, .fa-code {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Contact Management Dashboard</h2>
+    <a href="insertcontactform.html" class="btn btn-create">
+        <i class="fas fa-plus"></i> Create Contact
+    </a>
+    <a href="updatecontactform.html" class="btn btn-update">
+        <i class="fas fa-edit"></i> Update Contact
+    </a>
+    <a href="getallcontacts.html" class="btn btn-list">
+        <i class="fas fa-list"></i> Contact List
+    </a>
+    <a href="api/" class="btn btn-api">
+        <i class="fas fa-code"></i> API
+    </a>
+</div>
+
+</body>
+</html>

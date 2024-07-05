@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+  <title>OsemSalmon Bootstrap</title>
+  <meta content="" name="description">
+  <meta content="" name="keywords">
+
+  <!-- Favicons -->
+  <link href="assets/img/favicon.png" rel="icon">
+  <link href="assets/img/apple-touch-icon.png" rel="apple-touch-icon">
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,300i,400,400i,600,600i,700,700i|Raleway:300,300i,400,400i,500,500i,600,600i,700,700i|Poppins:300,300i,400,400i,500,500i,600,600i,700,700i" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/aos/aos.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/vendor/boxicons/css/boxicons.min.css" rel="stylesheet">
+  <link href="assets/vendor/glightbox/css/glightbox.min.css" rel="stylesheet">
+  <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
+  <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet">
+
+  <!-- Template Main CSS File -->
+  <link href="assets/css/style.css" rel="stylesheet">
+
+  <!-- DOM -->
+  <link href="https://unpkg.com/gojs@2.3.5/extensions/Buttons.js" rel="stylesheet"/>
+  <script src="https://unpkg.com/gojs@2.3.5/release/go.js"></script>
+
+</head>
+<script id="code">
+  var names = {}; // hash to keep track of what names have been used
+
+  function init() {
+    // Since 2.2 you can also author concise templates with method chaining instead of GraphObject.make
+    // For details, see https://gojs.net/latest/intro/buildingObjects.html
+    const $ = go.GraphObject.make; // for conciseness in defining templates
+
+    myDiagram = $(go.Diagram, "DOMTree", {
+      initialAutoScale: go.Diagram.UniformToFill,
+      // define the layout for the diagram
+      layout: $(go.TreeLayout, {
+        nodeSpacing: 5,
+        layerSpacing: 30,
+        arrangement: go.TreeLayout.ArrangementFixedRoots,
+      }),
+    });
+
+    // Define a simple node template consisting of text followed by an expand/collapse button
+    myDiagram.nodeTemplate = $(
+      go.Node,
+      "Horizontal",
+      { selectionChanged: nodeSelectionChanged }, // this event handler is defined below
+      $(
+        go.Panel,
+        "Auto",
+        $(go.Shape, { fill: "#1F4963", stroke: null }),
+        $(
+          go.TextBlock,
+          {
+            font: "bold 13px Helvetica, bold Arial, sans-serif",
+            stroke: "white",
+            margin: 3,
+          },
+          new go.Binding("text", "key")
+        )
+      ),
+      $("TreeExpanderButton")
+    );
+
+    // Define a trivial link template with no arrowhead.
+    myDiagram.linkTemplate = $(
+      go.Link,
+      { selectable: false },
+      $(go.Shape)
+    ); // the link shape
+
+    // create the model for the DOM tree
+    myDiagram.model = new go.TreeModel({
+      isReadOnly: true, // don't allow the user to delete or copy nodes
+      // build up the tree in an Array of node data
+      nodeDataArray: traverseDom(document.activeElement),
+    });
+  }
+
+  // Walk the DOM, starting at document, and return an Array of node data objects representing the DOM tree
+  // Typical usage: traverseDom(document.activeElement)
+  // The second and third arguments are internal, used when recursing through the DOM
+  function traverseDom(node, parentName, dataArray) {
+    if (parentName === undefined) parentName = null;
+    if (dataArray === undefined) dataArray = [];
+    // skip everything but HTML Elements
+    if (!(node instanceof Element)) return;
+    // Ignore the navigation menus
+    if (node.id === "navSide" || node.id === "navTop") return;
+    // add this node to the nodeDataArray
+    var name = getName(node);
+    var data = { key: name, name: name };
+    dataArray.push(data);
+    // add a link to its parent
+    if (parentName !== null) {
+      data.parent = parentName;
+    }
+    // find all children
+    var l = node.childNodes.length;
+    for (var i = 0; i < l; i++) {
+      traverseDom(node.childNodes[i], name, dataArray);
+    }
+    return dataArray;
+  }
+
+  // Give every node a unique name
+  function getName(node) {
+    var n = node.nodeName;
+    if (node.id) n = n + " (" + node.id + ")";
+    var namenum = n; // make sure the name is unique
+    var i = 1;
+    while (names[namenum] !== undefined) {
+      namenum = n + i;
+      i++;
+    }
+    names[namenum] = node;
+    return namenum;
+  }
+
+  // When a Node is selected, highlight the corresponding HTML element.
+  function nodeSelectionChanged(node) {
+    if (node.isSelected) {
+      names[node.data.name].style.backgroundColor = "lightblue";
+    } else {
+      names[node.data.name].style.backgroundColor = "";
+    }
+  }
+  window.addEventListener("DOMContentLoaded", init);
+</script>
+
+
+<body>
+
+  <!-- ======= Header ======= -->
+  <header id="header" class="fixed-top ">
+    <div class="container d-flex align-items-center justify-content-lg-between">
+
+      <!-- Uncomment below if you prefer to use an image logo -->
+      <!-- <a href="index.html" class="logo me-auto me-lg-0"><img src="assets/img/logo.png" alt="" class="img-fluid"></a>-->
+
+      <nav id="navbar" class="navbar order-last order-lg-0">
+        <ul>
+          <li><a class="nav-link scrollto active" href="#hero">Home</a></li>
+          <li><a class="nav-link scrollto" href="#team">Team</a></li>
+          <li class="dropdown"><a href="#"><span>Assignment and Exercise</span> <i class="bi bi-chevron-down"></i></a>
+            <ul>
+              <li class="dropdown"><a href="#"><span>Exercise</span> <i class="bi bi-chevron-right"></i></a>
+                <ul>
+                  <li><a href="./Exercise1/product/Exercise1.html">Exercise 1</a></li>
+                  <li><a href="./RESTAPIExample/">Rest Api</a></li>
+                </ul>
+              </li>
+              <li class="dropdown"><a href="#"><span>Assignment</span> <i class="bi bi-chevron-right"></i></a>
+                <ul>
+                  <li><a href="./Assignment2/MainPage/MainPage.html">Assignment 2</a></li>
+                </ul>
+                <ul>
+                  <li><a href="./Exercise1/product">Assignment 1</a></li>
+                  <li><a href="./Shop/MainPage/MainPage.html">Assignment 2</a></li>
+                  <li><a href="./StudentInfo/index.php">Assignment 3</a></li>
+                  <li><a href="./contactmanagementsystemSC/">Assignment 4</a></li>
+                </ul>
+              </li>
+              
+            </ul>
+          </li>
+          <li><a class="nav-link scrollto" href="#DOM">DOM</a></li>
+        </ul>
+        <i class="bi bi-list mobile-nav-toggle"></i>
+      </nav><!-- .navbar -->
+
+      <a href="#about" class="get-started-btn scrollto">Get Started</a>
+
+    </div>
+  </header><!-- End Header -->
+
+  <!-- ======= Hero Section ======= -->
+  <section id="hero" class="d-flex align-items-center justify-content-center">
+    <div class="container" data-aos="fade-up">
+
+      <div class="row justify-content-center" data-aos="fade-up" data-aos-delay="150">
+        <div class="col-xl-6 col-lg-8">
+          <h1>OSEM<span>SALMON</span></h1>
+        </div>
+      </div>
+
+      <div class="row gy-4 mt-5 justify-content-center" data-aos="zoom-in" data-aos-delay="250">
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <h3><a href="./Exercise1/product">Assignment<br>
+              1</a></h3>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <h3><a href="./Shop/MainPage/MainPage.html">Shop</a></h3>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <h3><a href="./StudentInfo/index.php">Student Info</a></h3>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <h3><a href="./contactmanagementsystemSC/">Api</a></h3>
+          </div>
+        </div>
+        <div class="col-xl-2 col-md-4">
+          <div class="icon-box">
+            <h3><a href="">Soon</a></h3>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section><!-- End Hero -->
+
+  <main id="main">
+
+    <!-- ======= Team Section ======= -->
+    <section id="team" class="team">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>Team</h2>
+          <p>Check our Team</p>
+        </div>
+
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="100">
+              <div class="member-img">
+                <img src="assets/img/team/team-1.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>AHMAD DANIAL HARITH BIN AHMAD KAMAL</h4>
+                <span>Member</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="200">
+              <div class="member-img">
+                <img src="assets/img/team/team-2.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>ARIFF ISKANDAR BIN SHAMSUDDIN</h4>
+                <span>Member</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="300">
+              <div class="member-img">
+                <img src="assets/img/team/team-3.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>MUHAMAD ALIFF FAHMI BIN MOHAMAD ASRI</h4>
+                <span>Member</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-3 col-md-6 d-flex align-items-stretch">
+            <div class="member" data-aos="fade-up" data-aos-delay="400">
+              <div class="member-img">
+                <img src="assets/img/team/team-4.jpg" class="img-fluid" alt="">
+                <div class="social">
+                  <a href=""><i class="bi bi-twitter"></i></a>
+                  <a href=""><i class="bi bi-facebook"></i></a>
+                  <a href=""><i class="bi bi-instagram"></i></a>
+                  <a href=""><i class="bi bi-linkedin"></i></a>
+                </div>
+              </div>
+              <div class="member-info">
+                <h4>MUHAMMAD ZULKARNAIN BIN HAMIDI</h4>
+                <span>Member</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section><!-- End Team Section -->
+
+    <section id="DOM" class="DOM">
+      <div class="container" data-aos="fade-up">
+
+        <div class="section-title">
+          <h2>DOM</h2>
+          <p>DOM for the Website</p>
+          <div id="#">
+                  <div id="DOMTree" style=" border: 1px solid black; width: 100%; height: 300px; position: relative;">
+                    <canvas tabindex="0" style=" position: absolute; top: 0px; left: 0px; z-index: 2; user-select: none; touch-action: none; width: 1054px; height: 400px;" width="1054" height="400" >
+                      
+                      </canvas>
+                    <div style="position: absolute;overflow: auto;width: 1054px;height: 298px;z-index: 1;">
+                      <div style="position: absolute; width: 1220.01px; height: 1px"></div>
+                    </div>
+                  </div>
+                </div>
+          
+        </div>
+
+        <div class="row">
+
+        </div>
+
+      </div>
+    </section><!-- End Team Section -->
+
+  </main><!-- End #main -->
+
+  <!-- ======= Footer ======= -->
+  <footer id="footer">
+    <div class="footer-top">
+      <div class="container">
+        <div class="row">
+
+          <div class="col-lg-3 col-md-6">
+            <div class="footer-info">
+              <h3>Osem<span>Salmon</span></h3>
+              <p>
+                Web Technologies Group<br>
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+  <div id="preloader"></div>
+  <a href="#" class="back-to-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+
+  <!-- Vendor JS Files -->
+  <script src="assets/vendor/purecounter/purecounter_vanilla.js"></script>
+  <script src="assets/vendor/aos/aos.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
+  <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
+  <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
+  <script src="assets/vendor/php-email-form/validate.js"></script>
+
+  <!-- Template Main JS File -->
+  <script src="assets/js/main.js"></script>
+
+</body>
+
+</html>
